@@ -58,6 +58,12 @@ var arena = (function(arena) {
         }
     };
 
+    Corner.prototype.clear = function() {
+        updateElementIfNecessary(this.matchNumberElement, null);
+        updateElementIfNecessary(this.timeLeftElement, null);
+        updateElementIfNecessary(this.teamElement, "");
+    };
+
     var CornersView = function(corners, mainCorner) {
         var main = document.createElement("main");
         var aside = document.createElement("aside");
@@ -103,6 +109,8 @@ var arena = (function(arena) {
                     var timeToStart = nextMatch.secondsToStart();
                     corner.update(nextMatch.teams[i], nextMatch.number,
                                 -timeToStart);
+                } else {
+                    corner.clear();
                 }
             }
         }.bind(this));
