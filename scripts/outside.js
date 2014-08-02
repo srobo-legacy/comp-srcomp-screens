@@ -338,7 +338,7 @@ var outside = (function(outside) {
                     }
 
                     if (!match["error"]) {
-                        utils.simpleTableCell(tr, match["number"]);
+                        utils.simpleTableCell(tr, match["num"]);
 
                         var startTime = new Date(match["start_time"]);
                         utils.simpleTableCell(tr, utils.formatTime(startTime));

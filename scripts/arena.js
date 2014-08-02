@@ -141,7 +141,7 @@ var arena = (function(arena) {
 
     var Match = function(def) {
         this.teams = def.teams;
-        this.number = this.id = def.number;
+        this.number = this.id = def.num;
         this.startTime = new Date(def.start_time);
         this.endTime = new Date(def.end_time);
     };
