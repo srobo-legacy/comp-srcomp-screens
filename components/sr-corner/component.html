@@ -46,23 +46,28 @@
     </template>
 
     <script>
+        var reload = function() {
+            if (this.comp == null || this.corner == null) {
+                return;
+            }
+            this.comp.api.getCorner(this.corner, function(corner) {
+                this.colour = corner.colour;
+            }.bind(this));
+
+            this.$.team.comp = this.comp;
+
+            if (this.$.clock) {
+                this.$.clock.stream = this.comp.stream;
+            }
+
+            if (this.$.match) {
+                this.$.match.stream = this.comp.stream;
+            }
+        };
         Polymer({
             comp: null,
-            compChanged: function() {
-                this.comp.api.getCorner(this.corner, function(corner) {
-                    this.colour = corner.colour;
-                }.bind(this));
-
-                this.$.team.comp = this.comp;
-
-                if (this.$.clock) {
-                    this.$.clock.stream = this.comp.stream;
-                }
-
-                if (this.$.match) {
-                    this.$.match.stream = this.comp.stream;
-                }
-            }
+            compChanged: reload,
+            cornerChanged: reload
         });
     </script>
 </polymer-element>
