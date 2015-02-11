@@ -3,12 +3,16 @@
 <polymer-element name="sr-comp-api" attributes="url">
     <script>
         Polymer({
-            _apiCall: function(path, callback) {
+            _apiCall: function(path, callback, errback) {
                 var xhr = new XMLHttpRequest();
                 xhr.open('GET', this.url + path);
                 xhr.responseType = 'json';
                 xhr.onload = function(e) {
-                    callback(xhr.response);
+                    if (xhr.status == 200) {
+                        callback(xhr.response);
+                    } else if (errback != null) {
+                        errback(xhr.status);
+                    }
                 };
                 xhr.send();
             },
@@ -31,7 +35,13 @@
                 });
             },
             getTeam: function(tla, callback) {
-                this._apiCall('/teams/' + tla, callback);
+                 this._apiCall('/teams/' + tla, callback, function(status) {
+                    if (status == 404) {
+                        callback({'tla': tla,
+                                  'name': 'Team ' + tla,
+                                  'scores': {'game': 0, 'league': 0}});
+                    }
+                 });
             },
             getMatches: function(startTime, endTime, callback) {
                 var targetPath = ('/matches?start_time=' +
