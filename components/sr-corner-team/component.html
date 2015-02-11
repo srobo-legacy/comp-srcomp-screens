@@ -28,34 +28,45 @@
     </template>
 
     <script>
+        var updateFromMatchList = function(matchList) {
+            var match = null;
+            for (var i = 0; i < matchList.length; i++) {
+                if (matchList[i].arena == this.arena) {
+                    match = matchList[i];
+                }
+            }
+
+            if (match == null) {
+                // no current match
+                this.tla = '';
+                this.name = '';
+            } else {
+                this.tla = match.teams[this.corner];
+                if (this.tla == null) {
+                    this.tla = '—';
+                    this.name = '';
+                } else {
+                    this.comp.api.getTeam(this.tla, function(team) {
+                        this.name = team.name;
+                    }.bind(this));
+                }
+            }
+        };
         var reload = function() {
             if (this.comp == null || this.arena == null || this.corner == null) {
                 return;
             }
+            var receivedEvent = false;
+            var update = updateFromMatchList.bind(this);
+            this.comp.api.getCurrentMatches(function(matches) {
+                if (!receivedEvent) {
+                    update(matches);
+                }
+            });
             this.comp.stream.addEventListener('match', function(e) {
-                var match = null;
-                for (var i = 0; i < e.detail.length; i++) {
-                    if (e.detail[i].arena == this.arena) {
-                        match = e.detail[i];
-                    }
-                }
-
-                if (match == null) {
-                    // no current match
-                    this.tla = '';
-                    this.name = '';
-                } else {
-                    this.tla = match.teams[this.corner];
-                    if (this.tla == null) {
-                        this.tla = '—';
-                        this.name = '';
-                    } else {
-                        this.comp.api.getTeam(this.tla, function(team) {
-                            this.name = team.name;
-                        }.bind(this));
-                    }
-                }
-            }.bind(this));
+                receivedEvent = true;
+                update(e.detail);
+            });
         };
         Polymer({
             comp: null,

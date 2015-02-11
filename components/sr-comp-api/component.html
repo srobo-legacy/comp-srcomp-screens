@@ -25,6 +25,11 @@
                     callback(response.corners);
                 });
             },
+            getCurrentMatches: function(callback) {
+                this._apiCall('/current', function(response) {
+                    callback(response['matches']);
+                });
+            },
             getTeam: function(tla, callback) {
                 this._apiCall('/teams/' + tla, callback);
             },
