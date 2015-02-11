@@ -1,0 +1,16 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html" />
+
+<polymer-element name="sr-clock-pulse">
+    <script>
+        Polymer({
+            attached: function() {
+                var tick = function() {
+                    this.fire('pulse');
+                    var nextPulse = 1000 - new Date().getMilliseconds();
+                    setInterval(tick, nextPulse);
+                }.bind(this);
+                tick();
+            }
+        });
+    </script>
+</polymer-element>
