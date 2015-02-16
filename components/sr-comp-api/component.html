@@ -90,10 +90,15 @@
                 });
             },
             getTeam: function(tla, callback) {
-                 this._apiCall('/teams/' + tla, callback, function() {
-                    callback({'tla': tla,
-                              'name': 'Team ' + tla,
-                              'scores': {'game': 0, 'league': 0}});
+                 this._apiCall('/teams', function(teamList) {
+                     var team = teamList[tla];
+                     if (team != null) {
+                         callback(team);
+                     } else {
+                         callback({'tla': tla,
+                                   'name': 'Team ' + tla,
+                                   'scores': {'game': 0, 'league': 0}});
+                     }
                  });
             },
             getKnockout: function(callback) {
