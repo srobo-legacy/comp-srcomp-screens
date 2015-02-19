@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html" />
+<link rel="import" href="../natural-sort/component.html" />
 
 <polymer-element name="sr-leaderboard">
     <template>
@@ -49,7 +50,11 @@
                 }
 
                 teams.sort(function(a, b) {
-                    return b.league_points - a.league_points;
+                    if (b.league_points == a.league_points) {
+                        return naturalSort(a.name, b.name, {insensitive: true});
+                    } else {
+                        return b.league_points - a.league_points;
+                    }
                 });
 
                 teams.splice(10);
