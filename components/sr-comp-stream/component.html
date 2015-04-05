@@ -8,6 +8,11 @@
 
                 this.eventSource = new EventSource(this.realUrl);
 
+                this.eventSource.addEventListener('delay_value', function(e) {
+                    console.log("Got a 'delay_value' event from the stream.");
+                    this.fire('delay_value', JSON.parse(e.data));
+                }.bind(this));
+
                 this.eventSource.addEventListener('match', function(e) {
                     console.log("Got a 'match' event from the stream.");
                     this.fire('match', JSON.parse(e.data));

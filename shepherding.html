@@ -11,6 +11,7 @@
         <link rel="import" href="components/sr-schedule/component.html" />
         <link rel="import" href="components/sr-corner/component.html" />
         <link rel="import" href="components/sr-clock/component.html" />
+        <link rel="import" href="components/sr-delay/component.html" />
 
         <style>
             body {
@@ -68,14 +69,29 @@
                 -webkit-flex: 1 1 auto;
             }
 
-            sr-clock {
+            #time {
                 flex: 0 0 auto;
                 -webkit-flex: 0 0 auto;
+
+                width: 100%;
+
+                display: flex;
+                display: -webkit-flex;
+                flex-direction: row;
+                -webkit-flex-direction: row;
+            }
+
+            sr-clock {
+                text-align: right;
+            }
+
+            sr-clock, sr-delay {
+                flex: 1 1 auto;
+                -webkit-flex: 1 1 auto;
 
                 margin: 0.1em;
                 font-size: 3.6em;
             }
-
         </style>
     </head>
 
@@ -96,7 +112,10 @@
                          back="1" forward="15"
                          headings="false"></sr-schedule>
 
-            <sr-clock></sr-clock>
+            <div id="time">
+                <sr-clock></sr-clock>
+                <sr-delay id="delay"></sr-delay>
+            </div>
         </main>
 
         <script>
@@ -122,6 +141,9 @@
                     picker.comp = comp;
                     comp.stream.load();
                 } else {
+                    var delay = document.getElementById('delay');
+                    delay.comp = comp;
+
                     comp.api.getArena(args.arena, function(compArena) {
                         if (compArena) {
                             var shepherding = document.querySelector('#shepherding');

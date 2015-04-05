@@ -115,6 +115,11 @@
                     callback(response.corners);
                 });
             },
+            getCurrentDelay: function(callback) {
+                this._apiCall('/current', function(response) {
+                    callback(response['delay']);
+                });
+            },
             getCurrentMatches: function(callback) {
                 this._apiCall('/current', function(response) {
                     callback(response['matches']);
