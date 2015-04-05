@@ -1,0 +1,52 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html" />
+
+<polymer-element name="sr-delay">
+    <template>
+        <style>
+            h1 {
+                margin: inherit;
+                color: inherit;
+                font-size: inherit;
+            }
+            #delay {
+                font-size: 0.6em;
+                vertical-align: middle;
+            }
+        </style>
+
+        <h1><span id="delay">Delay: </span>{{ sign }}{{ minutes | padTimeComponent }}:{{ seconds | padTimeComponent }}</h1>
+    </template>
+
+    <script>
+        var reload = function() {
+            this.comp.api.getCurrentDelay(this.updateDelay.bind(this));
+            this.comp.stream.addEventListener('current-delay', function(e) {
+                this.updateDelay(e.detail);
+            }.bind(this));
+        };
+        Polymer({
+            comp: null,
+            compChanged: reload,
+            sign: '',
+            minutes: 0,
+            seconds: 0,
+            updateDelay: function(seconds) {
+                if (seconds < 0) {
+                    this.sign = '-';
+                    seconds = -seconds;
+                } else {
+                    this.sign = '';
+                }
+                this.minutes = Math.floor(seconds / 60);
+                this.seconds = seconds % 60;
+            },
+            padTimeComponent: function(value) {
+                if (value <= 9) {
+                    return '0' + value;
+                } else {
+                    return '' + value;
+                }
+            },
+        });
+    </script>
+</polymer-element>
