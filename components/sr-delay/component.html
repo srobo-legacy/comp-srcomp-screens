@@ -1,0 +1,68 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html" />
+
+<polymer-element name="sr-delay">
+    <template>
+        <style>
+            h1 {
+                margin: inherit;
+                color: inherit;
+                font-size: inherit;
+            }
+            #delay {
+                font-size: 0.6em;
+                vertical-align: middle;
+            }
+        </style>
+
+        <h1><span id="delay">Delay: </span>{{ value }}</h1>
+    </template>
+
+    <script>
+        var reload = function() {
+            this.comp.api.getCurrentDelay(this.updateDelay.bind(this));
+            this.comp.stream.addEventListener('current-delay', function(e) {
+                this.updateDelay(e.detail);
+            }.bind(this));
+        };
+        Polymer({
+            comp: null,
+            compChanged: reload,
+            value: '',
+            updateDelay: function(total_seconds) {
+                // Build a delay string for the user.
+                // Each portion of it only appears if it has anything to show,
+                // leading to output of the forms: none, 1m 30s, 30s or 1m.
+
+                if (total_seconds == 0) {
+                    this.value = 'none';
+                    return;
+                }
+
+                // Handle negative delays (unlikely but possible)
+                if (total_seconds < 0) {
+                    this.value = '-';
+                    total_seconds = -total_seconds;
+                } else {
+                    this.value = '';
+                }
+                // The number of minutes
+                var minutes = Math.ceil(total_seconds / 60);
+                if (minutes > 0) {
+                    this.value += minutes + 'm ';
+                }
+                // The number of seconds after the whole mintues have been removed
+                var seconds = total_seconds % 60;
+                if (seconds > 0) {
+                    this.value += seconds + 's';
+                }
+            },
+            padTimeComponent: function(value) {
+                if (value <= 9) {
+                    return '0' + value;
+                } else {
+                    return '' + value;
+                }
+            },
+        });
+    </script>
+</polymer-element>
